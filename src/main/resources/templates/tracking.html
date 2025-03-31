@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{tracking.title}">Tracking - Pregnancy Tracker</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container mt-5">
+    <!-- Language selector -->
+    <div class="mb-3">
+        <label for="language">Language:</label>
+        <select id="language" onchange="location = '/member/tracking?lang=' + this.value;">
+            <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+            <option value="vi" th:selected="${#locale.language == 'vi'}">Vietnamese</option>
+        </select>
+    </div>
+
+    <h2 th:text="#{tracking.title}">Pregnancy Tracking</h2>
+
+    <!-- Hiển thị thông tin thời tiết -->
+    <div th:if="${weather != null}" class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title" th:utext="#{weather.title} + ' ' + ${weather.name}"></h5>
+            <p class="card-text" th:utext="#{temperature.label} + ': ' + ${weather.main.temp} + ' °C'"></p>
+            <p class="card-text" th:utext="#{humidity.label} + ': ' + ${weather.main.humidity} + '%'"></p>
+        </div>
+    </div>
+
+    <!-- Hiển thị lời khuyên sức khỏe -->
+    <div th:if="${healthAdvice != null}" class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Health Advice for Week <span th:text="${healthAdvice.week}"></span></h5>
+            <p class="card-text" th:text="${healthAdvice.advice}"></p>
+        </div>
+    </div>
+
+    <!-- Hiển thị thông tin theo dõi -->
+    <div th:if="${tracking != null}" class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title" th:text="#{tracking.title}"></h5>
+            <p class="card-text" th:utext="#{username.label} + ': ' + ${tracking.username}"></p>
+            <p class="card-text" th:utext="#{location.label} + ': ' + ${tracking.location}"></p>
+            <p class="card-text" th:utext="#{file.path.label} + ': ' + ${tracking.filePath}"></p>
+            <a th:href="@{/member/tracking/update}" class="btn btn-primary" th:text="#{update.tracking.button}"></a>
+        </div>
+    </div>
+
+    <!-- Form thêm lịch khám thai -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title" th:text="#{add.appointment.title}"></h5>
+            <form th:action="@{/member/tracking/add-appointment}" th:object="${appointment}" method="post">
+                <div class="form-group">
+                    <label for="title" th:text="#{title.label}"></label>
+                    <input type="text" class="form-control" id="title" th:field="*{title}" required>
+                </div>
+                <div class="form-group">
+                    <label for="appointmentDate" th:text="#{date.label}"></label>
+                    <input type="datetime-local" class="form-control" id="appointmentDate" th:field="*{appointmentDate}" required>
+                </div>
+                <div class="form-group">
+                    <label for="description" th:text="#{description.label}"></label>
+                    <textarea class="form-control" id="description" th:field="*{description}"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" th:text="#{add.button}"></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hiển thị danh sách lịch khám thai -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title" th:text="#{upcoming.appointments.title}"></h5>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th th:text="#{title.label}"></th>
+                    <th th:text="#{date.label}"></th>
+                    <th th:text="#{description.label}"></th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="appointment : ${appointments}">
+                    <td th:text="${appointment.title}"></td>
+                    <td th:text="${appointment.appointmentDate}"></td>
+                    <td th:text="${appointment.description}"></td>
+                    <td>
+                        <a th:href="@{/member/tracking/delete-appointment/{id}(id=${appointment.id})}" class="btn btn-sm btn-danger" th:text="#{delete.button}"></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Hiển thị các giai đoạn thai kỳ -->
+    <h3 th:text="#{tracking.title}"></h3>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Week</th>
+            <th th:text="#{description.label}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="stage : ${stages}">
+            <td th:text="${stage.week}"></td>
+            <td th:text="${stage.description}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Liên kết đến các trang khác -->
+    <a href="/member/diary" class="btn btn-primary">Go to Diary</a>
+    <a href="/member/health" class="btn btn-primary">Go to Health Tracking</a>
+    <a href="/logout" class="btn btn-secondary" th:text="#{logout.button}"></a>
+</div>
+
+<!-- Script để đăng ký thông báo đẩy -->
+<script>
+    async function subscribeToPush() {
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            try {
+                const registration = await navigator.serviceWorker.register('/service-worker.js');
+                console.log('Service Worker registered with scope:', registration.scope);
+
+                // Lấy VAPID public key từ server
+                const response = await fetch('/notifications/public-key');
+                const vapidPublicKey = await response.text();
+
+                const subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: vapidPublicKey
+                });
+
+                await fetch('/notifications/subscribe', {
+                    method: 'POST',
+                    body: JSON.stringify(subscription),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } catch (error) {
+                console.error('Push subscription failed:', error);
+            }
+        }
+    }
+
+    subscribeToPush();
+</script>
+</body>
+</html>

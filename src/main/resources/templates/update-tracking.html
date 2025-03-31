@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{update.tracking.title}">Update Tracking - Pregnancy Tracker</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container mt-5">
+    <!-- Language selector -->
+    <div class="mb-3">
+        <label for="language">Language:</label>
+        <select id="language" onchange="location = '/member/tracking/update?lang=' + this.value;">
+            <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+            <option value="vi" th:selected="${#locale.language == 'vi'}">Vietnamese</option>
+        </select>
+    </div>
+
+    <h2 th:text="#{update.tracking.title}">Update Tracking</h2>
+    <form th:action="@{/member/tracking/update}" th:object="${tracking}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{username}">
+        <div class="form-group">
+            <label for="location" th:text="#{location.label}"></label>
+            <input type="text" class="form-control" id="location" th:field="*{location}" required>
+        </div>
+        <div class="form-group">
+            <label for="filePath" th:text="#{file.path.label}"></label>
+            <input type="text" class="form-control" id="filePath" th:field="*{filePath}" required>
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="#{update.tracking.button}"></button>
+        <a href="/member/tracking" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

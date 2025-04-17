@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Users - Pregnancy Tracker</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container mt-5">
+    <!-- Language selector -->
+    <div class="mb-3">
+        <label for="language">Language:</label>
+        <select id="language" onchange="location = '/admin/users?lang=' + this.value;">
+            <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+            <option value="vi" th:selected="${#locale.language == 'vi'}">Vietnamese</option>
+        </select>
+    </div>
+
+    <h2>Manage Users</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{username.label}"></th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Verified</th>
+            <th>Active</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.role}"></td>
+            <td th:text="${user.isVerified} ? 'Yes' : 'No'"></td>
+            <td th:text="${user.isActive} ? 'Yes' : 'No'"></td>
+            <td>
+                <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-sm btn-primary">Edit</a>
+                <a th:href="@{/admin/users/toggle/{id}(id=${user.id})}" class="btn btn-sm btn-warning">
+                    <span th:text="${user.isActive} ? 'Disable' : 'Enable'"></span>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/member/tracking" class="btn btn-secondary" th:text="#{tracking.title}"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Tracking Record - Pregnancy Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Add Tracking Record</h2>
+                    <form th:action="@{/member/add-tracking}" th:object="${trackingRecord}" method="post" id="addTrackingForm">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <div class="form-group">
+                            <label for="date" class="form-label">Date</label>
+                            <i class="fas fa-calendar"></i>
+                            <input type="date" th:field="*{date}" class="form-control has-icon" id="date" required>
+                            <div th:errors="*{date}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight" class="form-label">Weight (kg)</label>
+                            <i class="fas fa-weight"></i>
+                            <input type="number" th:field="*{weight}" class="form-control has-icon" id="weight" required>
+                            <div th:errors="*{weight}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="babyLength" class="form-label">Baby Length (cm)</label>
+                            <i class="fas fa-ruler"></i>
+                            <input type="number" th:field="*{babyLength}" class="form-control has-icon" id="babyLength" required>
+                            <div th:errors="*{babyLength}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bloodPressure" class="form-label">Blood Pressure</label>
+                            <i class="fas fa-heartbeat"></i>
+                            <input type="text" th:field="*{bloodPressure}" class="form-control has-icon" id="bloodPressure">
+                            <div th:errors="*{bloodPressure}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="testResults" class="form-label">Test Results</label>
+                            <i class="fas fa-file-medical"></i>
+                            <textarea th:field="*{testResults}" class="form-control has-icon" id="testResults" rows="4"></textarea>
+                            <div th:errors="*{testResults}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vaccinationSchedule" class="form-label">Vaccination Schedule</label>
+                            <i class="fas fa-syringe"></i>
+                            <input type="date" th:field="*{vaccinationSchedule}" class="form-control has-icon" id="vaccinationSchedule">
+                            <div th:errors="*{vaccinationSchedule}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes" class="form-label">Notes</label>
+                            <i class="fas fa-sticky-note"></i>
+                            <textarea th:field="*{notes}" class="form-control has-icon" id="notes" rows="4"></textarea>
+                            <div th:errors="*{notes}" class="text-danger"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('addTrackingForm').addEventListener('submit', function(e) {
+        const weight = document.getElementById('weight').value;
+        const babyLength = document.getElementById('babyLength').value;
+        let errors = false;
+
+        if (weight < 0) {
+            document.getElementById('weight').nextElementSibling.textContent = 'Weight cannot be negative';
+            errors = true;
+        }
+        if (babyLength < 0) {
+            document.getElementById('babyLength').nextElementSibling.textContent = 'Baby length cannot be negative';
+            errors = true;
+        }
+
+        if (errors) e.preventDefault();
+    });
+</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93162e03691df4fc',t:'MTc0NDgzMjY5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/index}">Pregnancy Tracker</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/' ? 'active' : ''}" th:href="@{/}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/blog' ? 'active' : ''}" th:href="@{/blog}">Blog</a></li>
+                <li class="nav-item"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/faq' ? 'active' : ''}" th:href="@{/faq}">FAQ</a></li>
+                <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/member/profile' ? 'active' : ''}" th:href="@{/member/profile}">Profile</a></li>
+                <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/member/add-post' ? 'active' : ''}" th:href="@{/member/add-post}">Add Post</a></li>
+                <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/member/add-appointment' ? 'active' : ''}" th:href="@{/member/add-appointment}">Add Appointment</a></li>
+                <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/member/tracking' ? 'active' : ''}" th:href="@{/member/tracking}">Tracking</a></li>
+                <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/member/growth-charts' ? 'active' : ''}" th:href="@{/member/growth-charts}">Growth Charts</a></li>
+                <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/member/report' ? 'active' : ''}" th:href="@{/member/report}">Report</a></li>
+                <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/member/membership' ? 'active' : ''}" th:href="@{/member/membership}">Membership</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/admin/dashboard' ? 'active' : ''}" th:href="@{/admin/dashboard}">Admin Dashboard</a></li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post" class="d-inline">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="nav-link btn btn-link">Logout</button>
+                    </form>
+                </li>
+                <li class="nav-item" sec:authorize="!isAuthenticated()"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/login' ? 'active' : ''}" th:href="@{/login}">Login</a></li>
+                <li class="nav-item" sec:authorize="!isAuthenticated()"><a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/signup' ? 'active' : ''}" th:href="@{/signup}">Sign Up</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9315b9460f39763d',t:'MTc0NDgyNzkxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

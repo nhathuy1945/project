@@ -1,154 +1,66 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title th:text="#{tracking.title}">Tracking - Pregnancy Tracker</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracking - Pregnancy Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}"></div>
 <div class="container mt-5">
-    <!-- Language selector -->
-    <div class="mb-3">
-        <label for="language">Language:</label>
-        <select id="language" onchange="location = '/member/tracking?lang=' + this.value;">
-            <option value="en" th:selected="${#locale.language == 'en'}">English</option>
-            <option value="vi" th:selected="${#locale.language == 'vi'}">Vietnamese</option>
-        </select>
-    </div>
-
-    <h2 th:text="#{tracking.title}">Pregnancy Tracking</h2>
-
-    <!-- Hiển thị thông tin thời tiết -->
-    <div th:if="${weather != null}" class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title" th:utext="#{weather.title} + ' ' + ${weather.name}"></h5>
-            <p class="card-text" th:utext="#{temperature.label} + ': ' + ${weather.main.temp} + ' °C'"></p>
-            <p class="card-text" th:utext="#{humidity.label} + ': ' + ${weather.main.humidity} + '%'"></p>
-        </div>
-    </div>
-
-    <!-- Hiển thị lời khuyên sức khỏe -->
-    <div th:if="${healthAdvice != null}" class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Health Advice for Week <span th:text="${healthAdvice.week}"></span></h5>
-            <p class="card-text" th:text="${healthAdvice.advice}"></p>
-        </div>
-    </div>
-
-    <!-- Hiển thị thông tin theo dõi -->
-    <div th:if="${tracking != null}" class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title" th:text="#{tracking.title}"></h5>
-            <p class="card-text" th:utext="#{username.label} + ': ' + ${tracking.username}"></p>
-            <p class="card-text" th:utext="#{location.label} + ': ' + ${tracking.location}"></p>
-            <p class="card-text" th:utext="#{file.path.label} + ': ' + ${tracking.filePath}"></p>
-            <a th:href="@{/member/tracking/update}" class="btn btn-primary" th:text="#{update.tracking.button}"></a>
-        </div>
-    </div>
-
-    <!-- Form thêm lịch khám thai -->
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title" th:text="#{add.appointment.title}"></h5>
-            <form th:action="@{/member/tracking/add-appointment}" th:object="${appointment}" method="post">
-                <div class="form-group">
-                    <label for="title" th:text="#{title.label}"></label>
-                    <input type="text" class="form-control" id="title" th:field="*{title}" required>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Your Tracking Records</h2>
+                    <div sec:authorize="isAuthenticated()">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Weight (kg)</th>
+                                    <th>Baby Length (cm)</th>
+                                    <th>Blood Pressure</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="record : ${trackingRecords}">
+                                    <td th:text="${#dates.format(record.date, 'dd MMM yyyy')}"></td>
+                                    <td th:text="${record.weight}"></td>
+                                    <td th:text="${record.babyLength}"></td>
+                                    <td th:text="${record.bloodPressure} ?: 'N/A'"></td>
+                                    <td>
+                                        <a th:href="@{/member/edit-tracking/{id}(id=${record.id})}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(trackingRecords)}">
+                                    <td colspan="5">No tracking records found.</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-4">
+                            <a th:href="@{/member/add-tracking}" class="btn btn-primary">Add New Record</a>
+                            <a th:href="@{/member/add-appointment}" class="btn btn-secondary ms-2">View Appointments</a>
+                        </div>
+                    </div>
+                    <div sec:authorize="!isAuthenticated()" class="alert alert-danger">
+                        Please log in to view your tracking records.
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="appointmentDate" th:text="#{date.label}"></label>
-                    <input type="datetime-local" class="form-control" id="appointmentDate" th:field="*{appointmentDate}" required>
-                </div>
-                <div class="form-group">
-                    <label for="description" th:text="#{description.label}"></label>
-                    <textarea class="form-control" id="description" th:field="*{description}"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" th:text="#{add.button}"></button>
-            </form>
+            </div>
         </div>
     </div>
-
-    <!-- Hiển thị danh sách lịch khám thai -->
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title" th:text="#{upcoming.appointments.title}"></h5>
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th th:text="#{title.label}"></th>
-                    <th th:text="#{date.label}"></th>
-                    <th th:text="#{description.label}"></th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="appointment : ${appointments}">
-                    <td th:text="${appointment.title}"></td>
-                    <td th:text="${appointment.appointmentDate}"></td>
-                    <td th:text="${appointment.description}"></td>
-                    <td>
-                        <a th:href="@{/member/tracking/delete-appointment/{id}(id=${appointment.id})}" class="btn btn-sm btn-danger" th:text="#{delete.button}"></a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Hiển thị các giai đoạn thai kỳ -->
-    <h3 th:text="#{tracking.title}"></h3>
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>Week</th>
-            <th th:text="#{description.label}"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="stage : ${stages}">
-            <td th:text="${stage.week}"></td>
-            <td th:text="${stage.description}"></td>
-        </tr>
-        </tbody>
-    </table>
-
-    <!-- Liên kết đến các trang khác -->
-    <a href="/member/diary" class="btn btn-primary">Go to Diary</a>
-    <a href="/member/health" class="btn btn-primary">Go to Health Tracking</a>
-    <a href="/logout" class="btn btn-secondary" th:text="#{logout.button}"></a>
 </div>
-
-<!-- Script để đăng ký thông báo đẩy -->
-<script>
-    async function subscribeToPush() {
-        if ('serviceWorker' in navigator && 'PushManager' in window) {
-            try {
-                const registration = await navigator.serviceWorker.register('/service-worker.js');
-                console.log('Service Worker registered with scope:', registration.scope);
-
-                // Lấy VAPID public key từ server
-                const response = await fetch('/notifications/public-key');
-                const vapidPublicKey = await response.text();
-
-                const subscription = await registration.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: vapidPublicKey
-                });
-
-                await fetch('/notifications/subscribe', {
-                    method: 'POST',
-                    body: JSON.stringify(subscription),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-            } catch (error) {
-                console.error('Push subscription failed:', error);
-            }
-        }
-    }
-
-    subscribeToPush();
-</script>
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9315bc45ae5653f7',t:'MTc0NDgyODAzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

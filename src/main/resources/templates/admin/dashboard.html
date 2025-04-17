@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Pregnancy Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Admin Dashboard</h2>
+                    <div sec:authorize="hasRole('ADMIN')">
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <i class="fas fa-users fa-3x mb-3" style="color: #ff6f91;"></i>
+                                        <h3 class="card-title" style="font-size: 1.5rem;">Total Users</h3>
+                                        <p class="card-text" th:text="${totalUsers}">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <i class="fas fa-file-alt fa-3x mb-3" style="color: #ff6f91;"></i>
+                                        <h3 class="card-title" style="font-size: 1.5rem;">Total Posts</h3>
+                                        <p class="card-text" th:text="${totalPosts}">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <i class="fas fa-question-circle fa-3x mb-3" style="color: #ff6f91;"></i>
+                                        <h3 class="card-title" style="font-size: 1.5rem;">Total FAQs</h3>
+                                        <p class="card-text" th:text="${totalFaqs}">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-4">
+                            <a th:href="@{/admin/report}" class="btn btn-primary">View Detailed Report</a>
+                        </div>
+                    </div>
+                    <div sec:authorize="!hasRole('ADMIN')" class="alert alert-danger">
+                        You do not have permission to view this page.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'931628d4cc76f4fc',t:'MTc0NDgzMjQ3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>

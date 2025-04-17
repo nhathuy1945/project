@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit FAQ - Pregnancy Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Edit FAQ</h2>
+                    <form th:action="@{/member/edit-faq/{id}(id=${faq.id})}" th:object="${faq}" method="post" id="editFaqForm">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <div class="form-group">
+                            <label for="question" class="form-label">Question</label>
+                            <i class="fas fa-question-circle"></i>
+                            <input type="text" th:field="*{question}" class="form-control has-icon" id="question" required>
+                            <div th:errors="*{question}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="answer" class="form-label">Answer</label>
+                            <i class="fas fa-pen"></i>
+                            <textarea th:field="*{answer}" class="form-control has-icon" id="answer" rows="6" required></textarea>
+                            <div th:errors="*{answer}" class="text-danger"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <a th:href="@{/faq}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('editFaqForm').addEventListener('submit', function(e) {
+        const question = document.getElementById('question').value;
+        const answer = document.getElementById('answer').value;
+        let errors = false;
+
+        if (question.length < 5) {
+            document.getElementById('question').nextElementSibling.textContent = 'Question must be at least 5 characters';
+            errors = true;
+        }
+        if (answer.length < 10) {
+            document.getElementById('answer').nextElementSibling.textContent = 'Answer must be at least 10 characters';
+            errors = true;
+        }
+
+        if (errors) e.preventDefault();
+    });
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9315ba297b404520',t:'MTc0NDgyNzk0Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

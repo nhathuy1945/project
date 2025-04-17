@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Tracker - Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container">
+    <section class="hero-section">
+        <h1>Welcome to Pregnancy Tracker</h1>
+        <p class="lead">Track your pregnancy journey with ease and stay informed with expert tips and personalized insights.</p>
+        <div class="mt-4">
+            <a th:href="@{/signup}" class="btn btn-primary">Get Started</a>
+            <a th:href="@{/faq}" class="btn btn-secondary ms-2">Learn More</a>
+        </div>
+    </section>
+    <section class="features mt-5">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-heartbeat fa-3x mb-3" style="color: #ff6f91;"></i>
+                        <h3 class="card-title" style="font-size: 1.5rem;">Health Tracking</h3>
+                        <p class="card-text">Monitor weight, baby growth, and medical records effortlessly.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-check fa-3x mb-3" style="color: #ff6f91;"></i>
+                        <h3 class="card-title" style="font-size: 1.5rem;">Appointments</h3>
+                        <p class="card-text">Schedule and manage doctor visits with reminders.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-book fa-3x mb-3" style="color: #ff6f91;"></i>
+                        <h3 class="card-title" style="font-size: 1.5rem;">Knowledge Base</h3>
+                        <p class="card-text">Access expert FAQs and pregnancy tips anytime.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9315bc45ee80adcf',t:'MTc0NDgyODAzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 package com.babycenter.pregnancy_tracker.repository;
 
-import com.babycenter.pregnancy_tracker.entity.User;
+import com.babycenter.pregnancy_tracker.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
